@@ -138,10 +138,12 @@ public class MongoDbContainer extends GenericContainer<MongoDbContainer> {
                     "Please, start %s first", MongoDbContainer.class.getCanonicalName())
             );
         }
-        return String.format(
+        val url = String.format(
             "mongodb://%s:%d/test",
             getContainerIpAddress(), getMappedPort(MONGO_DB_INTERNAL_PORT)
         );
+        log.debug("replica set url: {}", url);
+        return url;
     }
 
     @Override

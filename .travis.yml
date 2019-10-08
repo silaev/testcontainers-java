@@ -24,12 +24,12 @@ jobs:
 
     - stage: test
       env: [ NAME=mongodb-test ]
-      script: ./gradlew mongodb:clean mongodb:check --scan --no-daemon --no-build-cache
+      script: ./gradlew mongodb:check --scan --no-daemon
 
     - stage: test
       env: [ NAME=mongodb-test ]
       jdk: openjdk12
-      script: ./gradlew mongodb:clean mongodb:check --scan --no-daemon --no-build-cache
+      script: ./gradlew mongodb:check --scan --no-daemon
 
       #- env: [ NAME=selenium ]
     #  script: ./gradlew selenium:check --scan --no-daemon
@@ -55,7 +55,8 @@ jobs:
     #            openjdk:8-jdk-alpine \
     #            ./gradlew --no-daemon testcontainers:test --tests '*GenericContainerRuleTest' --scan
 
-    - env: [ NAME=docker-in-mongodb ]
+    - stage: dependent-test
+      env: [ NAME=docker-in-mongodb ]
       script:
           - |
               DOCKER_HOST=unix:///var/run/docker.sock DOCKER_TLS_VERIFY= docker run -t --rm \
