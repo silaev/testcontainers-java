@@ -1,8 +1,8 @@
-if: branch = master OR tag is present
+if: branch = test OR tag is present
 
 language: java
 jdk:
-  - oraclejdk8
+  - oraclejdk11
 
 sudo: required
 services:
@@ -13,43 +13,47 @@ install:
 
 jobs:
   include:
-    - stage: test
-      env: [ NAME=core ]
-      script: ./gradlew testcontainers:check javadoc --scan --no-daemon
+    #- stage: test
+    #  env: [ NAME=core ]
+    #  script: ./gradlew testcontainers:check javadoc --scan --no-daemon
+
+    #- stage: test
+    #  env: [ NAME=core ]
+    #  jdk: openjdk11
+    #  script: ./gradlew testcontainers:check --scan --no-daemon
 
     - stage: test
-      env: [ NAME=core ]
-      jdk: openjdk11
-      script: ./gradlew testcontainers:check --scan --no-daemon
+      env: [ NAME=mongodb-test ]
+      script: ./gradlew mongodb:clean mongodb:check --scan --no-daemon --no-build-cache
 
     - stage: test
-      env: [ NAME=core ]
+      env: [ NAME=mongodb-test ]
       jdk: openjdk12
-      script: ./gradlew testcontainers:check --scan --no-daemon
+      script: ./gradlew mongodb:clean mongodb:check --scan --no-daemon --no-build-cache
 
-    - env: [ NAME=selenium ]
-      script: ./gradlew selenium:check --scan --no-daemon
+      #- env: [ NAME=selenium ]
+    #  script: ./gradlew selenium:check --scan --no-daemon
 
-    - env: [ NAME=modules ]
-      script: ./gradlew check -x testcontainers:check -x selenium:check -x jdbc-test:check --scan --no-daemon
+    #- env: [ NAME=modules ]
+    #  script: ./gradlew check -x testcontainers:check -x selenium:check -x jdbc-test:check --scan --no-daemon
 
-    - env: [ NAME=jdbc ]
-      script: ./gradlew jdbc-test:check --scan --no-daemon
+    #- env: [ NAME=jdbc ]
+    #  script: ./gradlew jdbc-test:check --scan --no-daemon
 
-    - env: [ NAME=examples ]
-      script: cd examples && ../gradlew check --no-daemon
+    #- env: [ NAME=examples ]
+    #  script: cd examples && ../gradlew check --no-daemon
 
     # Run Docker-in-Docker tests inside Alpine
-    - env: [ NAME="docker-in-alpine-docker" ]
-      script:
-        - |
-                DOCKER_HOST=unix:///var/run/docker.sock DOCKER_TLS_VERIFY= docker run -t --rm \
-                -v "$HOME/.gradle":/root/.gradle/ \
-                -v /var/run/docker.sock:/var/run/docker.sock \
-                -v "$(pwd)":"$(pwd)" \
-                -w "$(pwd)" \
-                openjdk:8-jdk-alpine \
-                ./gradlew --no-daemon testcontainers:test --tests '*GenericContainerRuleTest' --scan
+    #- env: [ NAME="docker-in-alpine-docker" ]
+    #  script:
+    #    - |
+    #            DOCKER_HOST=unix:///var/run/docker.sock DOCKER_TLS_VERIFY= docker run -t --rm \
+    #            -v "$HOME/.gradle":/root/.gradle/ \
+    #            -v /var/run/docker.sock:/var/run/docker.sock \
+    #            -v "$(pwd)":"$(pwd)" \
+    #            -w "$(pwd)" \
+    #            openjdk:8-jdk-alpine \
+    #            ./gradlew --no-daemon testcontainers:test --tests '*GenericContainerRuleTest' --scan
 
     - env: [ NAME=docker-in-mongodb ]
       script:
