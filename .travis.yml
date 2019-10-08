@@ -65,7 +65,7 @@ jobs:
               -v "$(pwd)":"$(pwd)" \
               -w "$(pwd)" \
               openjdk:8-jdk-alpine \
-              ./gradlew mongodb:integrationTest --scan --no-daemon --no-build-cache
+              ./gradlew mongodb:integrationTest --scan --no-daemon
 
     - stage: deploy
       sudo: false
