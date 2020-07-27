@@ -155,7 +155,7 @@ dependencies {
         exclude(group: "net.java.dev.jna", module: "jna")
     }
 
-    compile "net.java.dev.jna:jna-platform:5.5.0"
+    compile "net.java.dev.jna:jna-platform:5.6.0"
 
     shaded ('com.github.docker-java:docker-java-transport-okhttp:3.2.5') {
         exclude(group: 'net.java.dev.jna')
